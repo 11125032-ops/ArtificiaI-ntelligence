@@ -38,7 +38,7 @@
 
 ---
 
-## 四、實作流程（摘要）
+## 四、實作流程
 
 > 本章節僅說明流程概念，實際指令與操作請見後續步驟。
 
@@ -55,8 +55,104 @@
 
 ## 五、Google Colab 實作步驟
 
-### 1️⃣ 掛載 Google Drive
+### 1.掛載 Google Drive
 
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
+```
+
+### 2.進入資料集資料夾
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+### 3.Clone YOLOv5 原始碼
+
+```bash
+!git clone https://github.com/ultralytics/yolov5
+```
+
+```python
+%cd yolov5
+```
+
+### 4.安裝必要套件
+
+```bash
+!pip install -r requirements.txt
+```
+
+### 5.修改資料集設定（data.yaml）
+
+確認 data.yaml 內容如下（路徑依實際資料夾調整）：
+```yami
+train: /content/drive/MyDrive/Mask/train/images
+val: /content/drive/MyDrive/Mask/valid/images
+
+nc: 2
+names: ['mask', 'no-mask']
+```
+
+### 6.修改模型類別數（yolov5s.yaml）
+
+將模型中的類別數從 80 改為 2：
+```yami
+nc: 2
+```
+
+### 7.啟用 GPU 並開始訓練
+
+將模型中的類別數從 80 改為 2：
+```bash
+!python train.py --img 640 --batch 16 --epochs 50 \
+--data data.yaml --cfg models/yolov5s.yaml --weights yolov5s.pt
+```
+
+---
+
+## 六、模型偵測成果
+
+### 1.圖片偵測
+
+```bash
+!python detect.py --weights runs/train/exp/weights/best.pt \
+--img 640 --conf 0.25 --source data/images
+```
+
+### 2.影片偵測
+
+```bash
+!python detect.py --weights runs/train/exp/weights/best.pt \
+--img 640 --conf 0.25 --source test.mp4
+```
+
+---
+
+## 七、成果展示
+
+- 圖片偵測成果：  
+- 影片偵測成果：
+
+---
+
+## 八、常見錯誤與解決方式
+
+| 問題             | 原因             | 解決方式                  |
+| -------------- | -------------- | --------------------- |
+| `--cache` 參數錯誤 | Word 自動轉成長破折號  | 改為 `--cache` 或移除      |
+| 訓練失敗           | data.yaml 路徑錯誤 | 檢查 Drive 路徑是否正確       |
+| 偵測不到物件         | confidence 太高  | 將 `--conf` 調低（如 0.25） |
+
+---
+
+## 九、結論
+
+本次作業成功使用 YOLOv5 與 Roboflow 資料集，在 Google Colab 上完成口罩配戴偵測模型的訓練與應用。
+透過本次實作，我們學習到：
+- 深度學習資料集的整理方式
+- YOLOv5 模型訓練流程
+- 模型應用於圖片與影片的實際偵測
+未來可延伸應用於即時監控、公共安全與防疫相關場景。
