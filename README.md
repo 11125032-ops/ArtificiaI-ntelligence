@@ -29,63 +29,68 @@
 
 ## 三、實作環境
 - 平台：Google Colab
-- 硬體加速：GPU（Tesla T4，約 16GB）
+- 硬體加速：GPU（Tesla T4）
 - 深度學習框架：PyTorch
 - 模型：YOLOv5
 - torch / CUDA（依 Colab 實際分配為主；本次實作輸出為 torch 2.9.0、CUDA 12.6）
 
 ---
 
-## 四、實作流程（依教學與作業文件步驟）
+## 四、實作流程
 
 ### 第一步：下載資料集（Roboflow）
 1. 進入 https://public.roboflow.com/
 2. 選擇 **Mask Wearing Dataset**
+![](assets/step01-01.png)
 3. 點擊 **raw**
-4. 下載格式選擇 **YOLO v5 PyTorch**（壓縮檔）
+![](assets/step01-02.png)
+4. 選擇下載 **YOLO v5 PyTorch** 的壓縮檔
+![](assets/step01-03.png)
 
 ---
 
 ### 第二步：解壓與上傳至 Google Drive
-1. 將下載的壓縮檔解壓
-2. 將資料夾更名為 `Mask`
-3. 上傳到 Google Drive 的 `MyDrive` 目錄底下  
-   （路徑會是：`/content/drive/MyDrive/Mask`）
+將下載的檔案解壓後，資料夾更名為 **Mask**，並上傳至 Google Drive（MyDrive）。
+![](assets/step02-01.png)
+![](assets/step02-02.png)
 
 ---
 
 ### 第三步：設定 Colab 使用 GPU
-在 Colab：  
-「執行階段」→「變更執行階段類型」→ 硬體加速器選 **GPU**
+進入 Colab「筆記本設定 / 變更執行階段類型」，將加速器調整為 **GPU**。
+![](assets/step03-01.png)
 
 ---
 
-### 第四步：掛載 Google Drive 並確認資料集路徑
+### 第四步：掛載 Google Drive 並確認資料集檔案
+運行（連結雲端資料）：
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
 ```
-
+![](assets/step04-01.png)
+接著輸入（切到 Mask 資料夾並確認檔案無誤）：
 ```python
 import os
 os.chdir('/content/drive/MyDrive/Mask')
 !ls
 ```
-
-確認資料夾內包含 `train`、`valid`、`test` 與 `data.yaml`。
+![](assets/step04-02.png)
+確認資料夾中包含 `train`、`valid`、`test` 與 `data.yaml`。
 
 ---
 
-### 第五步：下載 YOLOv5 原始碼並確認 GPU
+### 第五步：下載 YOLOv5 + 確認 GPU/版本 + 安裝套件
+輸入（將路徑從 Mask 調整回 MyDrive，下載 YOLOv5 到雲端並解壓）：
 ```python
 %cd /content/drive/MyDrive
 !git clone https://github.com/ultralytics/yolov5
 %cd yolov5
 ```
-
+接著輸入（確認 GPU / torch / cuda 資訊）：
 ```python
 import torch
-from IPython.display import clear_output
+from IPython.display import Image, clear_output
 
 clear_output()
 print('Setup complete. Using torch %s %s' % (
@@ -93,20 +98,22 @@ print('Setup complete. Using torch %s %s' % (
     torch.cuda.get_device_properties(0) if torch.cuda.is_available() else 'CPU'
 ))
 ```
-
-若成功使用 GPU，輸出可看到 Tesla T4 等資訊。
-
----
-
-### 第六步：安裝相依套件
+![](assets/step05-01.png)
+將路徑從 **Mask** 調整回 **MyDrive** ，接著將YOLOv5檔案從github下載到雲端中並解壓。
+可從輸出字串中看見Colab分配了一個Tesla T4的顯卡，16G的GPU顯存。torch版本為2.9.0，cuda版本為12.6。
+此為下載好的YOLOv5檔案：
+\![](assets/step05-02.png)
+接著輸入（安裝 requirements.txt）：
 ```python
 %pip install -qr requirements.txt
 ```
+![](assets/step05-03.png)
+![](assets/step05-04.png)
 
 ---
 
-### 第七步：修正資料集設定檔（data.yaml）與修改類別數（nc）
-#### (1) 修正 `Mask/data.yaml` 路徑
+### 第六步：修正 data.yaml 路徑 + 修改模型類別數 nc
+修改 `Mask/data.yaml` 中的路徑為正確內容：
 ```python
 import yaml
 
@@ -125,87 +132,95 @@ with open(yaml_path, 'w') as f:
 
 print("✅ data.yaml 路徑已修正完畢！")
 ```
+![](assets/step06-01.png)
+舊：
+![](assets/step06-02.png)
+新：
+![](assets/step06-03.png)
 
-#### (2) 修改模型類別數 `nc`
-開啟檔案：
-- `yolov5/models/yolov5s.yaml`
-
-將：
-```yaml
-nc: 80
-```
-改為：
-```yaml
-nc: 2
-```
-（因資料集只有 `mask` 與 `no-mask` 兩類）
+接著打開`yolov5/models/yolov5s.yaml`文件：
+![](assets/step06-04.png)
+將`nc:80`修改為`nc:2`。
+因為數據集中只有`mask`跟`no-mask`2種類別，此處需要類別數量一致。
+舊：
+![](assets/step06-05.png)
+新：
+![](assets/step06-06.png)
+數據集：
+![](assets/step06-07.png)
 
 ---
 
-### 第八步：模型訓練（300 epochs）
+### 第七步：模型訓練（300 epochs）
+進行模型訓練，次數與網站相同為 300 輪：
 ```python
 %cd /content/drive/MyDrive/yolov5
 !python train.py --img 640 --batch 16 --epochs 300 --data /content/drive/MyDrive/Mask/data.yaml --weights yolov5s.pt --cache
 ```
-
-訓練完成後，權重檔通常會在（注意 exp 可能是 exp、exp2...）：
-- `yolov5/runs/train/exp*/weights/best.pt`
+![](assets/step07-01.png)
+訓練好的權重文件通常存於：
+- `yolov5/runs/train/exp/weights/best.pt`
+通常使用 `best.pt`。
+![](assets/step07-02.png)
 
 ---
 
-### 第九步：圖片偵測測試（mask.jpg）
-1. 準備一張口罩相關圖片，命名為 `mask.jpg`
-2. 放進 `yolov5` 資料夾內（`/content/drive/MyDrive/yolov5/`）
+### 準備測試圖片（mask.jpg）
+選一張與口罩相關的圖片，命名為 `mask.jpg`，放入 `yolov5` 資料夾。
+![](assets/step08-01.png)
+![](assets/step08-02.png)
 
+---
+
+### 第九步：圖片偵測（mask.jpg）
+輸入：
 ```python
-!python detect.py --weights runs/train/exp*/weights/best.pt --img 640 --conf 0.5 --source mask.jpg
+!python detect.py --weights runs/train/exp/weights/best.pt --img 640 --conf 0.5 --source mask.jpg
 ```
-
-範例輸出可看到抓到「7 個 mask、2 個 no-mask」。  
-（若人物重疊，可能出現框被遮住的情況）
-
-輸出圖片位置（detect 的 exp 也可能遞增）：
-- `yolov5/runs/detect/exp*/mask.jpg`
+![](assets/step09-01.png)
+根據輸出內容，可見抓到 **7 人戴口罩**、**2 人沒戴口罩**。  
+依輸出最後一行路徑（例如 `runs/detect/exp3`）開啟 `mask.jpg` 可見效果圖。
+![](assets/step09-02.png)
+![](assets/step09-03.png)
+圖與輸出內容呈現一致，左邊人頭重疊，導致被遮住一個mask框，可從邊緣見到深藍色的框線。
+![](assets/step09-04.png)
 
 ---
 
-### 第十步：準備影片（mask.mp4）
-因原教學影音可能無法使用，本次改用自行下載之口罩相關影片：  
-1. 準備影片並命名為 `mask.mp4`
-2. 放進 `yolov5` 資料夾內
+### 第十步：準備測試影片（mask.mp4）
+鑒於原文影音無法使用，本次改為下載口罩相關影音，命名為 `mask.mp4`，並放入 `yolov5` 資料夾。
+![](assets/step10-01.png)
+![](assets/step10-02.png)
 
 ---
 
 ### 第十一步：影片偵測測試（mask.mp4）
+輸入：
 ```python
-!python detect.py --weights runs/train/exp*/weights/best.pt --img 640 --conf 0.5 --source mask.mp4
+!python detect.py --weights runs/train/exp/weights/best.pt --img 640 --conf 0.5 --source mask.mp4
 ```
-
-輸出影片位置：
-- `yolov5/runs/detect/exp*/mask.mp4`
-
-本次影片連結（Google Drive）：
-- https://drive.google.com/file/d/1-NRvPbJlOjaWktjQ8H-lDuW9dI2Ru02g/view?usp=drive_link
+![](assets/step11-01.png)
+![](assets/step11-02.png)
+依輸出最後一行路徑（例如 `runs/detect/exp4`）開啟 `mask.mp4`。  
+![](assets/step11-03.png)
+![](assets/step11-04.png)
+![](assets/step11-05.png)
 
 ---
 
 ## 五、實驗結果
 - 模型可辨識「有戴口罩（mask）」與「未戴口罩（no-mask）」
 - 在多人或遮擋情況下仍可進行基本偵測，但偶有誤判或漏判
-- 若需提升準確度，可增加資料量或調整訓練參數（如 epochs、batch size 等）
+- 若需提升準確度，可增加資料量或延長訓練次數
 
 ---
 
 ## 六、成果展示
-- 圖片偵測成果（路徑依實際 exp 編號為主）：
-  - `yolov5/runs/detect/exp*/mask.jpg`
-- 影片偵測成果（路徑依實際 exp 編號為主）：
-  - `yolov5/runs/detect/exp*/mask.mp4`
-- 影片 Drive 連結：
-  - https://drive.google.com/file/d/1-NRvPbJlOjaWktjQ8H-lDuW9dI2Ru02g/view?usp=drive_link
+- 影片（Google Drive）：
+  https://drive.google.com/file/d/1-NRvPbJlOjaWktjQ8H-lDuW9dI2Ru02g/view?usp=drive_link
 
 ---
 
 ## 七、結論
 本次實作成功完成 YOLOv5 口罩偵測模型之訓練與應用。  
-透過 Google Colab GPU 環境，可有效降低本地端硬體限制，並驗證深度學習模型在影像辨識任務上的可行性。
+透過 Google Colab GPU 環境，可有效降低本地端硬體限制，並驗證深度學習模型於影像辨識應用上的可行性。
