@@ -51,6 +51,7 @@
 
 ### 第二步：解壓與上傳至 Google Drive
 將下載的檔案解壓後，資料夾更名為 **Mask**，並上傳至 Google Drive。
+
 ![](assets/step02-01.png)
 ![](assets/step02-02.png)
 
