@@ -198,7 +198,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 
 ---
 
-### 準備測試圖片（mask.jpg）
+### 第八步：準備測試圖片（mask.jpg）
 選一張與口罩相關的圖片，命名為 `mask.jpg`，放入 `yolov5` 資料夾。
 
 ![](assets/step08-01.png)
