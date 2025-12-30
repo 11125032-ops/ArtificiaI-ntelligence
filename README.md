@@ -20,10 +20,8 @@
 - 資料集來源：Roboflow 公開資料集  
   https://public.roboflow.com/
 - 資料集名稱：Mask Wearing Dataset
-- 類別（Classes）：
-  - `mask`
-  - `no-mask`
-- 資料格式：YOLO v5 PyTorch 格式（含 `train / valid / test`）
+- 類別（Classes）： `mask`、`no-mask`
+- 資料格式：YOLO v5 PyTorch 格式（含 `train / valid / test`與 `data.yaml`）
 
 ---
 
@@ -71,7 +69,7 @@
 ---
 
 ### 第四步：掛載 Google Drive 並確認資料集檔案
-運行（連結雲端資料）：
+連結雲端資料：
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
@@ -79,7 +77,7 @@ drive.mount('/content/drive')
 
 ![](assets/step04-01.png)
 
-接著輸入（切到 Mask 資料夾並確認檔案無誤）：
+接著切到 Mask 資料夾並確認檔案無誤：
 ```python
 import os
 os.chdir('/content/drive/MyDrive/Mask')
@@ -93,13 +91,13 @@ os.chdir('/content/drive/MyDrive/Mask')
 ---
 
 ### 第五步：下載 YOLOv5 + 確認 GPU/版本 + 安裝套件
-輸入（將路徑從 Mask 調整回 MyDrive，下載 YOLOv5 到雲端並解壓）：
+將路徑從 Mask 調整回 MyDrive，下載 YOLOv5 到雲端並解壓：
 ```python
 %cd /content/drive/MyDrive
 !git clone https://github.com/ultralytics/yolov5
 %cd yolov5
 ```
-接著輸入（確認 GPU / torch / cuda 資訊）：
+確認 GPU / torch / cuda 資訊：
 ```python
 import torch
 from IPython.display import Image, clear_output
@@ -119,7 +117,7 @@ print('Setup complete. Using torch %s %s' % (
 
 \![](assets/step05-02.png)
 
-接著輸入（安裝 requirements.txt）：
+安裝 requirements.txt：
 ```python
 %pip install -qr requirements.txt
 ```
@@ -182,7 +180,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 ---
 
 ### 第七步：模型訓練（300 epochs）
-進行模型訓練，次數與網站相同為 300 輪：
+進行模型訓練，次數相同為 300 輪：
 ```python
 %cd /content/drive/MyDrive/yolov5
 !python train.py --img 640 --batch 16 --epochs 300 --data /content/drive/MyDrive/Mask/data.yaml --weights yolov5s.pt --cache
