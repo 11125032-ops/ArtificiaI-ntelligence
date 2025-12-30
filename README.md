@@ -244,6 +244,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 ![](assets/step11-01.png)
 
 ![](assets/step11-02.png)
+
 依輸出最後一行路徑（例如 `runs/detect/exp4`）開啟 `mask.mp4`。  
 
 ![](assets/step11-03.png)
