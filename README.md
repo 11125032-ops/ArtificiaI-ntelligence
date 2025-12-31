@@ -165,6 +165,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 
 將`nc:80`修改為`nc:2`。
 因為數據集中只有`mask`跟`no-mask`2種類別，此處需要類別數量一致。
+
 舊：
 
 ![](assets/step06-05.png)
