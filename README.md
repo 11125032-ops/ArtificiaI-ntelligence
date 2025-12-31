@@ -213,7 +213,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 ![](assets/step09-01.png)
 
 根據輸出內容，可見抓到 **7 人戴口罩**、**2 人沒戴口罩**。  
-依輸出最後一行路徑（例如 `runs/detect/exp3`）開啟 `mask.jpg` 可見效果圖。
+依輸出最後一行路徑指示 `runs/detect/exp3`開啟 `mask.jpg` 可見效果圖。
 
 ![](assets/step09-02.png)
 
@@ -244,7 +244,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 
 ![](assets/step11-02.png)
 
-依輸出最後一行路徑（例如 `runs/detect/exp4`）開啟 `mask.mp4`。  
+依輸出最後一行路徑指示`runs/detect/exp4`開啟 `mask.mp4` 可見效果影音。  
 
 ![](assets/step11-03.png)
 
