@@ -266,7 +266,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 - 影片（Google Drive）：
   https://drive.google.com/file/d/19j_gLBSvO2-13zTOpjhaF4bCB53HZpfa/view?usp=sharing
 - 程式碼（Google Colab）：
-  https://colab.research.google.com/drive/1FoII8ldzJDGDIYRxra8x6lqibQxnOdUY?usp=sharing
+  https://colab.research.google.com/drive/13rLM4C4zaaEHsjNKzdaxxVgK3e7AZ8Sg?usp=sharing
 
 ---
 
