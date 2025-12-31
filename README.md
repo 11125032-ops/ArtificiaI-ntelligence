@@ -115,7 +115,7 @@ print('Setup complete. Using torch %s %s' % (
 可從輸出字串中看見Colab分配了一個Tesla T4的顯卡，16G的GPU顯存。torch版本為2.9.0，cuda版本為12.6。
 此為下載好的YOLOv5檔案：
 
-\[](assets/step05-02.png)
+![](assets/step05-02.png)
 
 安裝 requirements.txt：
 ```python
@@ -264,7 +264,9 @@ print("✅ data.yaml 路徑已修正完畢！")
 
 ## 六、成果展示
 - 影片（Google Drive）：
-  https://drive.google.com/file/d/1-NRvPbJlOjaWktjQ8H-lDuW9dI2Ru02g/view?usp=drive_link
+  https://drive.google.com/file/d/19j_gLBSvO2-13zTOpjhaF4bCB53HZpfa/view?usp=sharing
+- 程式碼（Google Colab）：
+  https://colab.research.google.com/drive/1FoII8ldzJDGDIYRxra8x6lqibQxnOdUY?usp=sharing
 
 ---
 
