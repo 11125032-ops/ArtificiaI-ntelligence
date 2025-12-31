@@ -189,9 +189,7 @@ print("✅ data.yaml 路徑已修正完畢！")
 
 ![](assets/step07-01.png)
 
-訓練好的權重文件通常存於：
-- `yolov5/runs/train/exp/weights/best.pt`
-通常使用 `best.pt`。
+訓練好的權重文件通常存於`yolov5/runs/train/exp/weights/best.pt`，通常使用 `best.pt`。
 
 ![](assets/step07-02.png)
 
